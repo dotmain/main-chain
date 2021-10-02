@@ -22,36 +22,4 @@ public func configure(_ app: Application) throws {
     
     app.views.use(.leaf)
     try routes(app)
-    
-//    let data = DataModel(identifier: "SomeID", log: "Hello World", value: 100)
-//    let _ = data.save(on: app.db)
-//    let block = BlockModel(dataModels: [data])
-//    block.add(datablock: data)
-//    let _ = block.save(on: app.db)
-//
-//    let chain = BlockChain(genesis: block)
-//    let next = chain.next(block: [data])
-//    let _ = next.save(on: app.db)
-//
-//    print(chain.decoded)
-    
-    
-//    print(chain.decoded)
 }
-
-
-
-
-//create genesis for license
-//add blocks to unit
-//calculuate license value
-//store chain
-
-
-//web routes
-//api routes
-//admin routes
-
-//license admin
-//value admin
-//accounting
