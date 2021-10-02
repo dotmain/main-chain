@@ -16,15 +16,9 @@
 #
 version: '3.7'
 
-volumes:
-  db_data:
-
 x-shared_environment: &shared_environment
   LOG_LEVEL: ${LOG_LEVEL:-debug}
-  DATABASE_HOST: db
-  DATABASE_NAME: vapor_database
-  DATABASE_USERNAME: vapor_username
-  DATABASE_PASSWORD: vapor_password
+  DATABASE_URL: mongodb://db:27017/institute
 
 services:
   app:
@@ -39,6 +33,7 @@ services:
       - '8080:8080'
     # user: '0' # uncomment to run as root for testing purposes even though Dockerfile defines 'vapor' user.
     command: ["serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "8080"]
+    restart: always
   migrate:
     image: mongo-vapor:latest
     build:
@@ -61,3 +56,13 @@ services:
     command: ["migrate", "--revert", "--yes"]
     deploy:
       replicas: 0
+  db:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb:/data/db
+    restart: unless-stopped
+volumes:
+  mongodb:
+

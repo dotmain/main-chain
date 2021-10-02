@@ -10,5 +10,6 @@ func routes(_ app: Application) throws {
         return "Hello, world!"
     }
 
-    try app.register(collection: TodoController())
+    try app.register(collection: LicenseController())
+    try app.register(collection: BlockChainController())
 }
