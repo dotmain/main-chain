@@ -9,3 +9,6 @@ run:
 
 stop:
 	docker-compose down
+
+clean:
+	docker-compose down -v 
