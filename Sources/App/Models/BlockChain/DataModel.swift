@@ -13,6 +13,7 @@ enum DataModelFields: FieldKey {
     case schema = "data"
     case id
     case identifier
+    case version
     case log
     case value
     case synthesis
@@ -36,6 +37,9 @@ final class DataModel: Model, Content {
     
     @Field(key: DataModelFields.log.rawValue)
     var log: String
+    
+    @Field(key: DataModelFields.version.rawValue)
+    var version: String
     
     @Field(key: DataModelFields.value.rawValue)
     var value: Double

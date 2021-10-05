@@ -18,6 +18,7 @@ struct CreateDataModelMigrator: Migration {
             .field(DataModelFields.log.rawValue, .double, .required)
             .field(DataModelFields.total.rawValue, .double, .required)
             .field(DataModelFields.identifier.rawValue, .string, .required)
+            .field(DataModelFields.version.rawValue, .string, .required)
             .field(DataModelFields.createdAt.rawValue, .date)
             .unique(on: DataModelFields.id.rawValue)
             .create()
