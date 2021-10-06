@@ -1,6 +1,7 @@
 build:
 	cd server && $(MAKE) build
 	cd client && $(MAKE) build
+	docker-compose build
 
 run:
 	docker-compose up

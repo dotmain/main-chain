@@ -24,6 +24,8 @@ enum DataModelFields: FieldKey {
 struct DataLog: Content {
     var log: String
     var value: Double
+    var identifier: String
+    var version: String
 }
 
 final class DataModel: Model, Content {
@@ -58,6 +60,7 @@ final class DataModel: Model, Content {
     private enum CodingKeys: CodingKey {
         case id
         case identifier
+        case version
         case log
         case value
         case createdAt
@@ -68,12 +71,14 @@ final class DataModel: Model, Content {
     init(id: UUID? = nil,
          createdAt: Date? = nil,
          identifier: String,
+         version: String,
          log: String,
          value: Double
     ) {
         self.id = id
         self.log = log
         self.identifier = identifier
+        self.version = version
         self.createdAt = createdAt
         var logValue = value
         processors.apply(to: &logValue)

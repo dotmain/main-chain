@@ -83,7 +83,10 @@ extension Request {
                 case .success:
                     return self.eventLoop.makeSucceededFuture(Response(status: .ok))
                 case .failure:
-                    let genesis = DataModel(identifier: identifier, log: BlockChainFields.genesis.rawValue.description + "-" + identifier, value: 0.0)
+                    let genesis = DataModel(identifier: identifier,
+                                            version: BlockChainFields.genesis.rawValue.description,
+                                            log: BlockChainFields.genesis.rawValue.description + "-" + identifier,
+                                            value: 0.0)
                     return genesis.save(on: self.db)
                         .flatMap{ _ in
                             let block = BlockModel(identifier: identifier, dataModels: [genesis])
@@ -107,7 +110,10 @@ extension Request {
         let newLog = try content.decode(DataLog.self)
         return try findChain()
             .tryFlatMap({ chain in
-                let model = DataModel(identifier: chain.identifier, log: newLog.log, value: newLog.value)
+                let model = DataModel(identifier: identifier,
+                                      version: newLog.version,
+                                      log: newLog.log,
+                                      value: newLog.value)
                 return model.save(on: self.db)
                     .flatMap{ _ in
                         let block = chain.next(block: BlockModel(identifier: model.identifier, dataModels: [model]))
