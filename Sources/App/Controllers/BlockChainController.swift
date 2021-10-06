@@ -11,10 +11,27 @@ import Vapor
 //register chain for license
 //get chain for license
 //update chain withblocks
+
+enum ChainError: Error {
+    case unauthorized
+}
+
+struct ChainGate: Middleware {
+
+    func respond(to request: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
+        guard
+            let bearer = request.headers.bearerAuthorization,
+            bearer.token == Environment.get("APIKEY")
+        else { return request.eventLoop.makeFailedFuture(Abort(.unauthorized)) }
+        return next.respond(to: request)
+    }
+}
  
 struct BlockChainController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
-        let chain = routes.grouped("blockchain")
+        let chain = routes
+            .grouped(ChainGate())
+            .grouped("blockchain")
         chain.get(use: index)
         chain.post(use: create)
         chain.group(":identifier") { route in
