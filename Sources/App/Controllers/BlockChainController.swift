@@ -85,6 +85,7 @@ extension Request {
                 case .failure:
                     let genesis = DataModel(identifier: identifier,
                                             version: BlockChainFields.genesis.rawValue.description,
+                                            model: BlockChainFields.genesis.rawValue.description,
                                             log: BlockChainFields.genesis.rawValue.description + "-" + identifier,
                                             value: 0.0)
                     return genesis.save(on: self.db)
@@ -112,6 +113,7 @@ extension Request {
             .tryFlatMap({ chain in
                 let model = DataModel(identifier: identifier,
                                       version: newLog.version,
+                                      model: newLog.model,
                                       log: newLog.log,
                                       value: newLog.value)
                 return model.save(on: self.db)

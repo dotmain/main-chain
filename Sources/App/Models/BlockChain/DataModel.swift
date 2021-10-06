@@ -14,6 +14,7 @@ enum DataModelFields: FieldKey {
     case id
     case identifier
     case version
+    case model
     case log
     case value
     case synthesis
@@ -26,6 +27,7 @@ struct DataLog: Content {
     var value: Double
     var identifier: String
     var version: String
+    var model: String
 }
 
 final class DataModel: Model, Content {
@@ -42,6 +44,9 @@ final class DataModel: Model, Content {
     
     @Field(key: DataModelFields.version.rawValue)
     var version: String
+    
+    @Field(key: DataModelFields.version.rawValue)
+    var model: String
     
     @Field(key: DataModelFields.value.rawValue)
     var value: Double
@@ -64,6 +69,7 @@ final class DataModel: Model, Content {
         case log
         case value
         case createdAt
+        case model
     }
    
     init() { }
@@ -72,6 +78,7 @@ final class DataModel: Model, Content {
          createdAt: Date? = nil,
          identifier: String,
          version: String,
+         model: String,
          log: String,
          value: Double
     ) {
@@ -79,6 +86,7 @@ final class DataModel: Model, Content {
         self.log = log
         self.identifier = identifier
         self.version = version
+        self.model = model
         self.createdAt = createdAt
         var logValue = value
         processors.apply(to: &logValue)
