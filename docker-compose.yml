@@ -19,7 +19,8 @@ version: '3.7'
 x-shared_environment: &shared_environment
   LOG_LEVEL: ${LOG_LEVEL:-debug}
   DATABASE_URL: mongodb://db:27017/institute
-  APIKEY: ${APIKEY}
+  APIKEY-CHAIN: ${APIKEY-CHAIN}
+  APIKEY-LICENSE: ${APIKEY-LICENSE}
   
 services:
   app:

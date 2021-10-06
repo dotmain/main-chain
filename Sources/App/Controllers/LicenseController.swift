@@ -8,9 +8,24 @@
 import Fluent
 import Vapor
 
+
+struct LicenseGate: Middleware {
+
+    func respond(to request: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
+        guard
+            let bearer = request.headers.bearerAuthorization,
+            bearer.token == Environment.get("APIKEY-LICENSE")
+        else { return request.eventLoop.makeFailedFuture(Abort(.unauthorized)) }
+        return next.respond(to: request)
+    }
+}
+
+
 struct LicenseController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
-        let license = routes.grouped("license")
+        let license = routes
+            .grouped(LicenseGate())
+            .grouped("license")
         license.get(use: index)
         license.post(use: create)
         license.group(":identifier") { route in
