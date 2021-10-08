@@ -39,7 +39,7 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
-    axios.get('https://notherweb.com:5000').then((response) => {
+    axios.get('http://notherweb.com:5000').then((response) => {
       this.setState({ 
         chain: response.data,
         error: false
