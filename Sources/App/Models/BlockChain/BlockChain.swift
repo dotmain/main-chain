@@ -76,6 +76,7 @@ final class BlockChain: Content, Model {
     
     private enum CodingKeys: CodingKey {
         case blocks
+        case valid
     }
     
     func add(block: BlockModel) {

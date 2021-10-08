@@ -8,12 +8,18 @@
 import Fluent
 import Vapor
 
+//blocks [blocks]
+//id
+//identifier
+//createdAt
+
 //register chain for license
 //get chain for license
 //update chain withblocks
 
 enum ChainError: Error {
     case unauthorized
+    case invalid
 }
 
 struct ChainGate: Middleware {
@@ -21,7 +27,7 @@ struct ChainGate: Middleware {
     func respond(to request: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
         guard
             let bearer = request.headers.bearerAuthorization,
-            bearer.token == Environment.get("APIKEY-CHAIN")
+            bearer.token == Environment.get("APIKEYCHAIN")
         else { return request.eventLoop.makeFailedFuture(Abort(.unauthorized)) }
         return next.respond(to: request)
     }
@@ -91,6 +97,9 @@ extension Request {
             .filter(\.$identifier == identifier)
             .first()
             .unwrap(or: Abort(.notFound, reason: "No license with matching id"))
+            .guard({ chain in
+                chain.valid
+            }, else: ChainError.invalid)
     }
 
     func addChain(identifier: String) throws -> EventLoopFuture<Response> {
@@ -145,8 +154,15 @@ extension Request {
                                     .set(\.$blocks, to: blcks)
                                     .filter(\.$identifier == identifier)
                                     .update()
-                                    .map { _ in Response(status: .ok,
-                                                         body: .init(string: "\(identifier) updated")) }
+                                    .map { _ in
+                                        guard
+                                            chain.valid,
+                                            let stored = blcks.last?.dataModels.last,
+                                            let encoded = try? JSONEncoder().encode(stored)
+                                        else  { return Response(status: .conflict) }
+                                        return Response(status: .ok,
+                                                        body: .init(data:  encoded))
+                                    }
                             }
                     }.flatMapErrorThrowing{ error in
                         throw Abort(.conflict, reason: "Coudnl't find chains: \(error)")

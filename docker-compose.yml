@@ -19,8 +19,8 @@ version: '3.7'
 x-shared_environment: &shared_environment
   LOG_LEVEL: ${LOG_LEVEL:-debug}
   DATABASE_URL: mongodb://db:27017/institute
-  APIKEY-CHAIN: ${APIKEY-CHAIN}
-  APIKEY-LICENSE: ${APIKEY-LICENSE}
+  APIKEYCHAIN: ${APIKEYCHAIN}
+  APIKEYLICENSE: ${APIKEYLICENSE}
   
 services:
   app:
@@ -94,6 +94,7 @@ services:
       <<: *shared_environment
     depends_on:
       - mongo
+      - app
   mongo:
     image: mongo
     ports:

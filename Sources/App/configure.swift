@@ -3,7 +3,15 @@ import FluentMongoDriver
 import Leaf
 import Vapor
 
-// configures your application
+
+//SET .env file in production
+
+//TIMES=2
+//PORT=2001
+//APIKEY-CHAIN=SUPERSECRETCHAINKEY
+//APIKEY-LICENSE= SUPERSECRETLICENSEKEY
+
+
 public func configure(_ app: Application) throws {
     // uncomment to serve files from /Public folder
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
