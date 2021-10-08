@@ -14,7 +14,7 @@ struct LicenseGate: Middleware {
     func respond(to request: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
         guard
             let bearer = request.headers.bearerAuthorization,
-            bearer.token == Environment.get("APIKEY-LICENSE")
+            bearer.token == Environment.get("APIKEYLICENSE")
         else { return request.eventLoop.makeFailedFuture(Abort(.unauthorized)) }
         return next.respond(to: request)
     }
