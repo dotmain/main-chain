@@ -8,14 +8,6 @@
 import Fluent
 import Vapor
 
-//blocks [blocks]
-//id
-//identifier
-//createdAt
-
-//register chain for license
-//get chain for license
-//update chain withblocks
 
 enum ChainError: Error {
     case unauthorized
@@ -53,8 +45,8 @@ struct BlockChainController: RouteCollection {
         req.chain()
     }
     
-    func indexOne(req: Request) throws -> EventLoopFuture<License> {
-        try req.findLicense()
+    func indexOne(req: Request) throws -> EventLoopFuture<BlockChain> {
+        try req.findChain()
     }
 
     func create(req: Request) throws -> EventLoopFuture<Response> {
@@ -101,6 +93,14 @@ extension Request {
                 chain.valid
             }, else: ChainError.invalid)
     }
+    
+    func findBlocks(identifier: String) throws -> EventLoopFuture<[BlockModel]> {
+        return BlockModel
+            .query(on: db)
+            .filter(\.$identifier == identifier)
+            .all()
+    }
+
 
     func addChain(identifier: String) throws -> EventLoopFuture<Response> {
         return try findChain(identifier: identifier)
@@ -120,8 +120,14 @@ extension Request {
                             return block.save(on: self.db)
                                 .flatMap { _ in
                                     let chain = BlockChain(genesis: block)
-                                    return chain.save(on: self.db)
-                                        .map { _ in Response(status: .ok) }
+                                    return block.update(on: self.db)
+                                        .flatMap { _ in
+                                            return chain.save(on: self.db)
+                                                .map { _ in Response(status: .ok) }
+                                                .guard({ _ in
+                                                    chain.valid
+                                                }, else: ChainError.invalid)
+                                        }
                                 }.flatMapErrorThrowing { error in
                                     throw Abort(.conflict, reason: "A chain with identifier exists: \(error)")
                                 }
@@ -147,25 +153,22 @@ extension Request {
                         let block = chain.next(block: BlockModel(identifier: model.identifier, dataModels: [model]))
                         return block.save(on: self.db)
                             .tryFlatMap { _ in
-                                var blcks = chain.blocks
-                                blcks.append(block)
-                                return BlockChain
-                                    .query(on: self.db)
-                                    .set(\.$blocks, to: blcks)
-                                    .filter(\.$identifier == identifier)
-                                    .update()
+                                chain.add(block: block)
+                                return chain
+                                    .update(on: self.db)
+                                    .guard({ _ in
+                                        chain.valid
+                                    }, else: ChainError.invalid)
                                     .map { _ in
                                         guard
-                                            chain.valid,
-                                            let stored = blcks.last?.dataModels.last,
-                                            let encoded = try? JSONEncoder().encode(stored)
+                                            let encoded = try? JSONEncoder().encode(block)
                                         else  { return Response(status: .conflict) }
                                         return Response(status: .ok,
                                                         body: .init(data:  encoded))
                                     }
                             }
                     }.flatMapErrorThrowing{ error in
-                        throw Abort(.conflict, reason: "Coudnl't find chains: \(error)")
+                        throw Abort(.conflict, reason: "Coudnl't find chains on save: \(error)")
                     }
             }).flatMapErrorThrowing{ error in
                 throw Abort(.conflict, reason: "Coudnl't find chains: \(error)")

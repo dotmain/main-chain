@@ -82,21 +82,27 @@ final class BlockModel: Content, Model {
         case hash
         case createdAt
         case dataModels
-        case valid
     }
     
     var hasher: String {
         guard
             let data = key.data(using: .utf8)
         else { return "" }
-        return SHA256.hash(data: data).hex//Insecure.SHA1.hash(data: data).hex
+        return SHA256.hash(data: data).hex
     }
     
     private var blockKey: String {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        let encoded = dataModels.map({
+            dmdl -> DataLog in
+            let x = dmdl.logKey
+            return x
+        })
         guard
-            let encoded = try? JSONEncoder().encode(dataModels)
+            let c = try? encoder.encode(encoded)
         else { return "[ERROR - TRANSACTIONS KEY] ENCODING ERROR" }
-        return String(data: encoded, encoding: .utf8)!
+        return String(data: c, encoding: .utf8)!
     }
     
     var valid: Bool {

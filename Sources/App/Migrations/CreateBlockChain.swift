@@ -15,7 +15,7 @@ struct CreateBlockChainMigrator: Migration {
             .id()
             .field(BlockModelFields.dataModels.rawValue, .array(of: .custom(BlockModel.self)), .required)
             .field(BlockModelFields.identifier.rawValue, .string, .required)
-            .field(BlockModelFields.createdAt.rawValue, .date)
+            .field(BlockModelFields.createdAt.rawValue, .datetime)
             .unique(on: BlockChainFields.id.rawValue)
             .unique(on: BlockChainFields.identifier.rawValue)
             .create()

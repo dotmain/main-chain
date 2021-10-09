@@ -19,7 +19,7 @@ struct CreateBlockModelMigrator: Migration {
             .field(BlockModelFields.hash.rawValue, .string, .required)
             .field(BlockModelFields.identifier.rawValue, .string, .required)
             .field(BlockModelFields.dataModels.rawValue, .array(of: .custom(DataModel.self)), .required)
-            .field(BlockModelFields.createdAt.rawValue, .date)
+            .field(BlockModelFields.createdAt.rawValue, .datetime)
             .unique(on: BlockModelFields.id.rawValue)
             .create()
     }

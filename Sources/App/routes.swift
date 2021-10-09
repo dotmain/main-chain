@@ -12,4 +12,5 @@ func routes(_ app: Application) throws {
 
     try app.register(collection: LicenseController())
     try app.register(collection: BlockChainController())
+    try app.register(collection: BlockModelController())
 }

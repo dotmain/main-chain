@@ -11,6 +11,18 @@ import Vapor
 //APIKEY-CHAIN=SUPERSECRETCHAINKEY
 //APIKEY-LICENSE= SUPERSECRETLICENSEKEY
 
+extension Request {
+    var encoder: JSONEncoder {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        return encoder
+    }
+    
+    var decoder: JSONDecoder {
+        let decoder = JSONDecoder()
+        return decoder
+    }
+}
 
 public func configure(_ app: Application) throws {
     // uncomment to serve files from /Public folder

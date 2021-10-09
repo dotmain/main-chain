@@ -71,6 +71,14 @@ final class DataModel: Model, Content {
         case createdAt
         case model
     }
+    
+    var logKey: DataLog {
+        return DataLog(log: log,
+                        value: value,
+                        identifier: identifier,
+                        version: version,
+                        model: model)
+    }
    
     init() { }
 
@@ -94,4 +102,5 @@ final class DataModel: Model, Content {
         self.value = value
         self.synthesis = logValue - value
     }
+
 }

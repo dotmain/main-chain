@@ -61,7 +61,7 @@ final class BlockChain: Content, Model {
     }
     
     var genesisKey: String {
-        initialKey ?? "000000000000000000"
+        initialKey ?? PreFixer.prefix + "00000000000000000000000000000000000"
     }
     
     
@@ -76,13 +76,14 @@ final class BlockChain: Content, Model {
     
     private enum CodingKeys: CodingKey {
         case blocks
-        case valid
     }
     
     func add(block: BlockModel) {
         
         if blocks.isEmpty {
             let genesis = block
+            genesis.index = 0
+            genesis.nonce = 0
             genesis.previousHash = genesisKey
             genesis.hashed()
             blocks.append(genesis)
@@ -106,11 +107,13 @@ final class BlockChain: Content, Model {
     }
     
     var decoded: String {
-        let data = try! JSONEncoder().encode(self)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        let data = try! encoder.encode(self)
         return String(data: data, encoding: .utf8)!
     }
     
     var valid: Bool {
-        blocks.filter({ !$0.valid }).count == 0
+        return blocks.filter({ !$0.valid }).count == 0
     }
 }
