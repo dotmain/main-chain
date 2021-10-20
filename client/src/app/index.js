@@ -63,7 +63,7 @@ export default class App extends React.Component {
           <div>
           <strong>Development test unit:</strong> notherweb.com
           <br/>
-         <strong>Entries: </strong>{chain.blocks.length}
+         <strong>Entries: </strong>{chain[0].blocks.length}
           <br/>
          <strong>ID: </strong>{chain[0].id}
           <br/>
