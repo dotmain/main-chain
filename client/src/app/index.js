@@ -98,6 +98,7 @@ export default class App extends React.Component {
               </p>
               <p>
                 <strong>synthesized:</strong> {model.createdAt}
+                <br/>property of mainvolume.com #mv
               </p>
             </li>
           ))}
