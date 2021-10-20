@@ -4,9 +4,9 @@ build:
 	docker-compose build
 
 run:
-	docker-compose up
-	docker-compose up app db
+	docker-compose up --detach app db
 	docker-compose run migrate
+	docker-compose up -d
 
 stop:
 	docker-compose down
