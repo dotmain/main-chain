@@ -32,13 +32,13 @@ public func configure(_ app: Application) throws {
         connectionString: Environment.get("DATABASE_URL") ?? "mongodb://127.0.0.1:27017/institute"
     ), as: .mongo)
 
-    try app.autoRevert().wait()
+    // try app.autoRevert().wait()
     app.migrations.add(CreateLicenseMigrator())
     app.migrations.add(CreateDataModelMigrator())
     app.migrations.add(CreateBlockModelMigrator())
     app.migrations.add(CreateBlockChainMigrator())
     
-    try app.autoMigrate().wait()
+    //try app.autoMigrate().wait()
     
     app.views.use(.leaf)
     try routes(app)

@@ -57,13 +57,13 @@ export default class App extends React.Component {
     const { chain, error } = this.state;
     return (
       <div>
-            Hi
+            Property of mainvolume.com - mv 2021
             <br/>
           {chain.length < 1 ? <strong>{error ? "Invalid or Empty Chain" : "Loading..."}</strong> : 
           <div>
           <strong>Development test unit:</strong> notherweb.com
           <br/>
-         <strong>Entries: </strong>{chain.length}
+         <strong>Entries: </strong>{chain.blocks.length}
           <br/>
          <strong>ID: </strong>{chain[0].id}
           <br/>
