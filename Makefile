@@ -8,6 +8,10 @@ run:
 	docker-compose run migrate
 	docker-compose up -d
 
+rerun:
+	docker-compose up --detach app db
+	docker-compose up -d
+
 stop:
 	docker-compose down
 
